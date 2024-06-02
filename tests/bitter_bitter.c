@@ -27,7 +27,62 @@ void test_alloc_success()
 	bitter_array_free(array);
 }
 
+void test_get_byte()
+{
+	struct bitter_array array = bitter_array_alloc(4, 8);
+	assert(bitter_array_valid(array));
+
+	array.bits[0] = 0xff;
+	array.bits[1] = 0x00;
+	array.bits[2] = 0x10;
+	array.bits[3] = 0xcc;
+
+	assert(bitter_array_get(array, 0) == 0xff);
+	assert(bitter_array_get(array, 1) == 0x00);
+	assert(bitter_array_get(array, 2) == 0x10);
+	assert(bitter_array_get(array, 3) == 0xcc);
+
+	bitter_array_free(array);
+}
+
+void test_get_small_overlap()
+{
+	struct bitter_array array = bitter_array_alloc(4, 3);
+	assert(bitter_array_valid(array));
+
+	bitter_array_set(array, 0, 07);
+	bitter_array_set(array, 1, 00);
+	bitter_array_set(array, 2, 05);
+	bitter_array_set(array, 3, 03);
+
+	assert(bitter_array_get(array, 0) == 07);
+	assert(bitter_array_get(array, 1) == 00);
+	assert(bitter_array_get(array, 2) == 05);
+	assert(bitter_array_get(array, 3) == 03);
+
+	bitter_array_free(array);
+}
+
+void test_get_large_overlap()
+{
+	struct bitter_array array = bitter_array_alloc(4, 15);
+	assert(bitter_array_valid(array));
+
+	bitter_array_set(array, 0, ~(~0 << 15));
+	bitter_array_set(array, 1, 0);
+	bitter_array_set(array, 2, 10);
+	bitter_array_set(array, 3, 1000);
+
+	assert(bitter_array_get(array, 0) == ~(~0 << 15));
+	assert(bitter_array_get(array, 1) == 0);
+	assert(bitter_array_get(array, 2) == 10);
+	assert(bitter_array_get(array, 3) == 1000);
+}
+
 int main()
 {
 	test_alloc_success();
+	test_get_byte();
+	test_get_small_overlap();
+	test_get_large_overlap();
 }

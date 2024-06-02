@@ -66,6 +66,7 @@ struct bitter_array {
  * \param length The number of elements to store in the
  * 	array.
  * \param width The amount of bits for each element.
+ *
  * \returns An initialized array on success, or an array
  * 	failing bitter_array_valid() on failure.
  */
@@ -75,6 +76,7 @@ struct bitter_array bitter_array_alloc(size_t length, int width);
  * \brief Tests if a given array is valid.
  *
  * \param array The array to test.
+ *
  * \returns True if the array is valid, false otherwise.
  */
 bool bitter_array_valid(struct bitter_array array);
@@ -85,6 +87,28 @@ bool bitter_array_valid(struct bitter_array array);
  * \param array The array to free.
  */
 void bitter_array_free(struct bitter_array array);
+
+/**
+ * \brief Retreives the number at the given position in the
+ * 	array.
+ *
+ * \param array The array to index into.
+ * \param index The 0-based index of the element to retrieve.
+ *
+ * \returns The number stored at the given element.
+ */
+int bitter_array_get(struct bitter_array array, size_t index);
+
+/**
+ * \brief Sets the value at the given index. Setting values
+ * 	greater than the bit-width supports is undefined
+ * 	behaviour.
+ *
+ * \param array The array to set the value in.
+ * \param index The location in the array to set the value at.
+ * \param value The value to set.
+ */
+void bitter_array_set(struct bitter_array array, size_t index, int value);
 
 #ifdef __cplusplus
 } // extern "C"
